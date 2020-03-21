@@ -1,0 +1,35 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "password",
+    "database": "task_manager_development",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false,
+    "define": {
+      "timestamps": true
+    }
+  },
+  "test": {
+    "username": "root",
+    "password": null,
+    "database": "task_manager_database_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false,
+    "define": {
+      "timestamps": true
+    }
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "task_manager_database_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false,
+    "define": {
+      "timestamps": true
+    }
+  }
+}
