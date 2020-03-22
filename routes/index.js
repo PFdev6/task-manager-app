@@ -1,4 +1,4 @@
-const express = require("express");
+const models = require("../models");
 const c = require("../controllers/index");
 
 module.exports = app => {

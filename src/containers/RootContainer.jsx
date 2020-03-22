@@ -3,13 +3,12 @@ import * as React from "react";
 /** Presentation */
 
 import { Wrapper } from "../components/Styles";
-
-import Login from "./Login";
+import Entry from "./Entry";
 
 function RootContainer() {
   return (
     <Wrapper>
-      <Login />
+      <Entry />
     </Wrapper>
   );
 }
