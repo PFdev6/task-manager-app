@@ -18,11 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "group_id",
       as: "tasks"
     });
-
-    Group.hasOne(models.User, {
-      foreignKey: "admin_id",
-      as: "admin"
-    });
   };
   return Group;
 };

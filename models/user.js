@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(models.Group, {
       foreignKey: "group_id"
     });
+
+
+    User.hasOne(models.Group, {
+      foreignKey: "admin_id",
+      as: "admin"
+    });
   };
   return User;
 };

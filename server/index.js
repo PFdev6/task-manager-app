@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const path = require("path");
 const app = express();
@@ -20,4 +21,3 @@ routes(app);
 app.listen(port, () => {
   console.log(`Server is listening to port ${port}`);
 });
-

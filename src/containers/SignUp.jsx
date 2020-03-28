@@ -5,7 +5,7 @@ import { Header } from "../components/Styles";
 import { apiRequest, validateSingUpForm } from "../utils/Helpers";
 import useErrorHandler from "../utils/custom-hooks/ErrorHandler";
 
-const SignUp = props => {
+const SignUp = (props) => {
   const [userEmail, setUserEmail] = React.useState("");
   const [userName, setUserName] = React.useState("");
   const [userPassword, setUserPassword] = React.useState("");
@@ -16,15 +16,16 @@ const SignUp = props => {
   const singUpHandler = async () => {
     try {
       setLoading(true);
-      const userData = await apiRequest("/api/singUp", "post", {
+      apiRequest("/api/singUp", "post", {
         email: userEmail,
         name: userName,
-        password: userPassword
+        password: userPassword,
+      }).then((data) => {
+        if (data.id) {
+          showError("Confirm account via email");
+        }
+        setLoading(false);
       });
-      const { id, email, status } = userData;
-      if (status === 200) {
-        console.log(`${id} --- ${email}`);
-      }
     } catch (err) {
       setLoading(false);
       showError(err.message);
@@ -33,7 +34,7 @@ const SignUp = props => {
 
   return (
     <Form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
         if (
           validateSingUpForm(
@@ -56,7 +57,7 @@ const SignUp = props => {
           name="email"
           value={userEmail}
           placeholder="john@mail.com"
-          onChange={e => setUserEmail(e.target.value)}
+          onChange={(e) => setUserEmail(e.target.value)}
         />
       </FormGroup>
       <FormGroup>
@@ -65,7 +66,7 @@ const SignUp = props => {
           name="userName"
           value={userName}
           placeholder="john"
-          onChange={e => setUserName(e.target.value)}
+          onChange={(e) => setUserName(e.target.value)}
         />
       </FormGroup>
       <FormGroup>
@@ -74,7 +75,7 @@ const SignUp = props => {
           name="password"
           value={userPassword}
           placeholder="Password"
-          onChange={e => setUserPassword(e.target.value)}
+          onChange={(e) => setUserPassword(e.target.value)}
         />
       </FormGroup>
       <FormGroup>
@@ -83,7 +84,7 @@ const SignUp = props => {
           name="confirmPassword"
           value={userConfirmPassword}
           placeholder="Confirm Password"
-          onChange={e => setUserConfirmPassword(e.target.value)}
+          onChange={(e) => setUserConfirmPassword(e.target.value)}
         />
       </FormGroup>
       <Button type="submit" disabled={loading} block={true}>
