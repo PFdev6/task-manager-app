@@ -4,24 +4,28 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       group_id: DataTypes.INTEGER,
-      email: DataTypes.STRING,
-      username: DataTypes.STRING,
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
+      username: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
       password: DataTypes.STRING,
-      confirmation_date: DataTypes.DATE
+      confirmation_date: DataTypes.DATE,
     },
     {}
   );
-  User.associate = function(models) {
+  User.associate = function (models) {
     User.belongsTo(models.Group, {
-      foreignKey: "group_id"
+      foreignKey: "group_id",
     });
-
 
     User.hasOne(models.Group, {
       foreignKey: "admin_id",
-      as: "admin"
+      as: "admin",
     });
   };
   return User;
 };
-

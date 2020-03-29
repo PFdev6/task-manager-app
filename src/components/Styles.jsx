@@ -18,7 +18,7 @@ export const ToDoItem = styled.div`
   text-align: center;
   font-weight: bold;
   cursor: pointer;
-  text-decoration: ${props => (props.complete ? "line-through" : "none")};
+  text-decoration: ${(props) => (props.complete ? "line-through" : "none")};
 `;
 
 export const JokeContainer = styled.div`

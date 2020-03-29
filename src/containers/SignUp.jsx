@@ -14,22 +14,31 @@ const SignUp = (props) => {
   const { error, showError } = useErrorHandler(null);
 
   const singUpHandler = async () => {
-    try {
-      setLoading(true);
-      apiRequest("/api/singUp", "post", {
-        email: userEmail,
-        name: userName,
-        password: userPassword,
-      }).then((data) => {
-        if (data.id) {
-          showError("Confirm account via email");
+    setLoading(true);
+    apiRequest("/api/singUp", "post", {
+      email: userEmail,
+      username: userName,
+      password: userPassword,
+    })
+      .then((data) => {
+        if (data.errors && data.errors.length) {
+          const errors = data.errors
+            .map((error) => {
+              return error.message;
+            })
+            .join(", ");
+          showError(errors);
+        } else {
+          if (data.id) {
+            showError("Confirm account via email");
+          }
         }
         setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        showError(err.message);
       });
-    } catch (err) {
-      setLoading(false);
-      showError(err.message);
-    }
   };
 
   return (
