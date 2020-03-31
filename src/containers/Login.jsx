@@ -1,16 +1,47 @@
 import * as React from "react";
 import { Button, Form, FormGroup, Input } from "reactstrap";
-/** Utils */
+import ErrorMessage from "../components/ErrorMessage";
+import useErrorHandler from "../utils/custom-hooks/ErrorHandler";
+import { authContext } from "../contexts/AuthContext";
+import { apiRequest, validateLoginForm } from "../utils/Helpers";
 import { Header } from "../components/Styles";
-function Login() {
+
+const Login = () => {
   const [userEmail, setUserEmail] = React.useState("");
   const [userPassword, setUserPassword] = React.useState("");
   const [loading, setLoading] = React.useState(false);
+  const auth = React.useContext(authContext);
+  const { error, showError } = useErrorHandler(null);
+
+  const authHandler = () => {
+    setLoading(true);
+    apiRequest("/api/login", "post", {
+      email: userEmail,
+      password: userPassword,
+    })
+      .then((userData) => {
+        const { id, email } = userData;
+        if (email) {
+          auth.setAuthStatus({ id, email });
+        }
+        if (userData.messages) {
+          showError(userData.messages.join(", "));
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        showError(err.message);
+      });
+  };
+
   return (
     <Form
-      onSubmit={e => {
+      onSubmit={(e) => {
         e.preventDefault();
-        // Auth handler
+        if (validateLoginForm(userEmail, userPassword, showError)) {
+          authHandler();
+        }
       }}
     >
       <Header>Sign in</Header>
@@ -21,7 +52,7 @@ function Login() {
           name="email"
           value={userEmail}
           placeholder="john@mail.com"
-          onChange={e => setUserEmail(e.target.value)}
+          onChange={(e) => setUserEmail(e.target.value)}
         />
       </FormGroup>
       <FormGroup>
@@ -30,13 +61,16 @@ function Login() {
           name="password"
           value={userPassword}
           placeholder="Password"
-          onChange={e => setUserPassword(e.target.value)}
+          onChange={(e) => setUserPassword(e.target.value)}
         />
       </FormGroup>
       <Button type="submit" disabled={loading} block={true}>
         {loading ? "Loading..." : "Sign In"}
       </Button>
+      <br />
+      {error && <ErrorMessage errorMessage={error} />}
     </Form>
   );
-}
+};
+
 export default Login;

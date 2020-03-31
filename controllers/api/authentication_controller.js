@@ -6,14 +6,35 @@ const jwt = require("jsonwebtoken");
 
 module.exports.signUp = (req, res) => {
   console.log(req.body);
-  const { email, username, password } = req.body;
-  const hashedPassword = bcrypt.hashSync(password, saltRounds);
-  db.User.create({ email, username, hashedPassword })
+  let { email, username, password } = req.body;
+  password = bcrypt.hashSync(password, saltRounds);
+  db.User.create({ email, username, password })
     .then((user) => {
       mailer.confirmationUser(user.email);
       res.status(201).send(user);
     })
     .catch((error) => res.status(400).send(error));
+};
+
+module.exports.login = (req, res) => {
+  console.log(req.body);
+  const { email, password } = req.body;
+  db.User.findOne({ where: { email: email } }).then((user) => {
+    if (user === null) {
+      res.status(404).send({ messages: ["User is not found"] });
+    }
+    console.log(password);
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      console.log(isMatch);
+      if (isMatch && user.confirmation_date) {
+        res.status(200).send({ id: user.id, email: user.email });
+      } else if (user.confirmation_date === null) {
+        res.status(400).send({ messages: ["Need to confirm email"] });
+      } else {
+        res.status(400).send({ messages: ["Email or password are incorrect"] });
+      }
+    });
+  });
 };
 
 module.exports.confirmUser = (req, res) => {

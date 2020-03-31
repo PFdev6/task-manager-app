@@ -1,16 +1,13 @@
 import * as React from "react";
-
-/** Presentation */
-
+import { authContext } from "../contexts/AuthContext";
 import { Wrapper } from "../components/Styles";
 import Entry from "./Entry";
+import Main from "./Main";
 
-function RootContainer() {
-  return (
-    <Wrapper>
-      <Entry />
-    </Wrapper>
-  );
-}
+const RootContainer = () => {
+  const { auth } = React.useContext(authContext);
+
+  return <Wrapper>{auth.id ? <Main /> : <Entry />}</Wrapper>;
+};
 
 export default RootContainer;
