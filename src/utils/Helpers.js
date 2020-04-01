@@ -1,5 +1,5 @@
 import * as validator from "validator";
-
+import { DEFAULT_USER_AUTH } from "./Consts";
 export const validateSingUpForm = (
   email,
   name,
@@ -41,14 +41,22 @@ export const validateLoginForm = (email, password, setError) => {
   return true;
 };
 
+export const getStoredUserAuth = () => {
+  const auth = window.localStorage.getItem("UserAuth");
+  if (auth) {
+    return JSON.parse(auth);
+  }
+  return DEFAULT_USER_AUTH;
+};
+
 export const apiRequest = async (url, method, bodyParams) => {
   const response = await fetch(url, {
     method,
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    body: bodyParams ? JSON.stringify(bodyParams) : {}
+    body: bodyParams ? JSON.stringify(bodyParams) : {},
   });
   return await response.json();
 };
