@@ -49,14 +49,13 @@ export const getStoredUserAuth = () => {
   return DEFAULT_USER_AUTH;
 };
 
-export const apiRequest = async (url, method, bodyParams) => {
-  const response = await fetch(url, {
+export const apiRequest = (url, method, bodyParams) => {
+  return fetch(url, {
     method,
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json",
+      "Content-Type": "application/json"
     },
-    body: bodyParams ? JSON.stringify(bodyParams) : {},
-  });
-  return await response.json();
+    body: bodyParams ? JSON.stringify(bodyParams) : {}
+  }).then(res => res.json());
 };

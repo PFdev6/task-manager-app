@@ -8,6 +8,8 @@ const HTML_FILE = path.join(DIST_DIR, "index.html");
 const bodyParser = require("body-parser");
 const routes = require("../routes/index");
 
+console.log(process.env.AUTH_TYPE);
+require(`./auth/${process.env.AUTH_TYPE}`);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(DIST_DIR));
