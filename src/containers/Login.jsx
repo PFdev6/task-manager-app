@@ -17,19 +17,19 @@ const Login = () => {
     setLoading(true);
     apiRequest("/api/login", "post", {
       email: userEmail,
-      password: userPassword,
+      password: userPassword
     })
-      .then((userData) => {
-        const { id, email } = userData;
-        if (email) {
-          auth.setAuthStatus({ id, email });
+      .then(userData => {
+        const { id, email, token } = userData;
+        if (token) {
+          auth.setAuthStatus({ id, email, token });
         }
         if (userData.messages) {
           showError(userData.messages.join(", "));
         }
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
         showError(err.message);
       });
@@ -37,7 +37,7 @@ const Login = () => {
 
   return (
     <Form
-      onSubmit={(e) => {
+      onSubmit={e => {
         e.preventDefault();
         if (validateLoginForm(userEmail, userPassword, showError)) {
           authHandler();
@@ -52,7 +52,7 @@ const Login = () => {
           name="email"
           value={userEmail}
           placeholder="john@mail.com"
-          onChange={(e) => setUserEmail(e.target.value)}
+          onChange={e => setUserEmail(e.target.value)}
         />
       </FormGroup>
       <FormGroup>
@@ -61,7 +61,7 @@ const Login = () => {
           name="password"
           value={userPassword}
           placeholder="Password"
-          onChange={(e) => setUserPassword(e.target.value)}
+          onChange={e => setUserPassword(e.target.value)}
         />
       </FormGroup>
       <Button type="submit" disabled={loading} block={true}>
