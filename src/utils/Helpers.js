@@ -1,5 +1,6 @@
 import * as validator from "validator";
 import { DEFAULT_USER_AUTH } from "./Consts";
+
 export const validateSingUpForm = (
   email,
   name,
@@ -38,6 +39,10 @@ export const validateLoginForm = (email, password, setError) => {
     return false;
   }
 
+  return true;
+};
+
+export const validateNewTaskForm = () => {
   return true;
 };
 

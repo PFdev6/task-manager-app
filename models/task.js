@@ -12,10 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {}
   );
+
   Task.associate = function(models) {
     Task.belongsTo(models.User, {
       foreignKey: "user_id"
     });
+
     Task.belongsTo(models.Group, {
       foreignKey: "group_id"
     });
@@ -24,7 +26,12 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "task_id",
       as: "notifications"
     });
+
+    Task.hasMany(models.Task, {
+      foreignKey: "parent_task_id",
+      as: "subTasks"
+    });
   };
+
   return Task;
 };
-
