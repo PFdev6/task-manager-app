@@ -20,9 +20,9 @@ const Login = () => {
       password: userPassword
     })
       .then(userData => {
-        const { id, email, token } = userData;
+        const { id, email, token, username } = userData;
         if (token) {
-          auth.setAuthStatus({ id, email, token });
+          auth.setAuthStatus({ id, email, token, username });
         }
         if (userData.messages) {
           showError(userData.messages.join(", "));

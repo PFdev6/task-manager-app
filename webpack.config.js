@@ -7,6 +7,7 @@ const htmlPlugin = new HtmlWebPackPlugin({
 const webpack = require("webpack");
 
 module.exports = {
+  watch: true,
   // Which file is the entry point to the application
   entry: "./src/index.jsx",
   // Which file types are in our project, and where they are located
@@ -44,4 +45,3 @@ module.exports = {
     ]
   }
 };
-
