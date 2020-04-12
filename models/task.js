@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
 
+  Task.MAIN_TASK = 0;
+  Task.SUB_TASK = 1;
+
   Task.associate = function(models) {
     Task.belongsTo(models.User, {
       foreignKey: "user_id"

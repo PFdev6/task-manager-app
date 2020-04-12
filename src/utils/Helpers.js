@@ -61,13 +61,17 @@ export const getStoredUserAuth = () => {
   return DEFAULT_USER_AUTH;
 };
 
-export const apiRequest = (url, method, bodyParams) => {
+export const apiRequest = (url, method, bodyParams, token = null) => {
+  let headers = {
+    Accept: "application/json",
+    "Content-Type": "application/json"
+  };
+  if (token !== null) {
+    headers.Authorization = `Bearer ${token}`;
+  }
   return fetch(url, {
     method,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
+    headers: headers,
     body: bodyParams ? JSON.stringify(bodyParams) : {}
   }).then(res => res.json());
 };

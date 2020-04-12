@@ -8,6 +8,26 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
 passport.use(
+  new JWTstrategy(
+    {
+      secretOrKey: process.env.JWT_PRIVATE_KEY,
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
+    },
+    (jwtPayload, done) => {
+      console.log("JWT mid");
+      console.log(jwtPayload);
+      db.User.findOne({ where: { id: jwtPayload.user.id } })
+        .then(user => {
+          return done(null, user);
+        })
+        .catch(err => {
+          return done(err);
+        });
+    }
+  )
+);
+
+passport.use(
   "login",
   new localStrategy(
     {
@@ -34,23 +54,6 @@ passport.use(
           }
         });
       });
-    }
-  )
-);
-
-passport.use(
-  new JWTstrategy(
-    {
-      secretOrKey: process.env.AUTH_TYPE,
-      jwtFromRequest: ExtractJWT.fromUrlQueryParameter("secret_token")
-    },
-    async (token, done) => {
-      try {
-        return done(null, token.user);
-      } catch (error) {
-        console.log("JWT error <------------------");
-        done(error);
-      }
     }
   )
 );

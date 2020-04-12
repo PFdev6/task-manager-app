@@ -29,7 +29,10 @@ const loginV1 = (req, res) => {
       console.log(isMatch);
       if (isMatch && user.confirmation_date) {
         req.session.log = true;
-        res.status(200).send({ id: user.id, email: user.email });
+        res.status(200).send({
+          id: user.id,
+          email: user.email
+        });
       } else if (user.confirmation_date === null) {
         res.status(400).send({ messages: ["Need to confirm email"] });
       } else {
@@ -51,7 +54,12 @@ const loginV2 = (req, res, next) => {
       if (user === false) return res.json(info);
       req.login(user, { session: false }, error => {
         if (error) return next(error);
-        const body = { id: user.id, email: user.email };
+        const body = {
+          id: user.id,
+          email: user.email,
+          username: user.username,
+          groupId: user.group_id
+        };
         const token = jwt.sign({ user: body }, process.env.JWT_PRIVATE_KEY);
         return res.json(Object.assign(body, { token: token }));
       });

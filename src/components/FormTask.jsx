@@ -11,8 +11,27 @@ const FormTask = () => {
   const [subTasks, setSubTasks] = React.useState([]);
   const [taskOwner, setTaskOwner] = React.useState("");
   const [loading, setLoading] = React.useState(false);
-  const auth = React.useContext(authContext);
+  const auth = React.useContext(authContext).auth;
   const { error, showError } = useErrorHandler(null);
+  const groupOption = auth.group_id ? <Option> Group </Option> : null;
+  const createTaskHandler = params => {
+    setLoading(true);
+    apiRequest(
+      "/api/tasks/create",
+      "post",
+      {
+        params
+      },
+      auth.token
+    )
+      .then(data => {
+        setLoading(false);
+      })
+      .catch(err => {
+        setLoading(false);
+        showError(err.message);
+      });
+  };
 
   return (
     <Form
@@ -27,9 +46,10 @@ const FormTask = () => {
 
           params.tasks[params.tasks.length - 1][typeField] = el.value;
         });
-
+        params.userId = auth.id;
+        params.groupId = auth.group_id;
         if (validateNewTaskForm(params.tasks, showError)) {
-          setLoading(true);
+          createTaskHandler(params);
         }
       }}
     >
@@ -47,8 +67,8 @@ const FormTask = () => {
           onChange={e => setTaskOwner(e.target.value)}
           name="taskOwner"
         >
-          <option>1</option>
-          <option>2</option>
+          <option>Own</option>
+          {groupOption}
         </Input>
       </FormGroup>
       {subTasks.map(subTask => subTask)}
