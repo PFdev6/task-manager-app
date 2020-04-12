@@ -5,7 +5,7 @@ const NewTask = props => {
   const [header, setHeader] = React.useState("");
   const [content, setContent] = React.useState("");
   const [endDate, setEndDate] = React.useState(
-    new Date().toISOString().substr(0, 10)
+    new Date().toISOString().substr(0, 16)
   );
   const typeTask = props.typeTask === "Subtask" ? props.typeTask : "Task";
   const id = props.id;
@@ -17,6 +17,7 @@ const NewTask = props => {
     <>
       <FormGroup>
         <Input
+          required={true}
           type="text"
           name={headerName}
           value={header}
@@ -33,10 +34,11 @@ const NewTask = props => {
       </FormGroup>
       <FormGroup>
         <Input
-          type="date"
+          required={true}
+          type="datetime-local"
           name={endDateName}
           value={endDate}
-          min={new Date().toISOString().substr(0, 10)}
+          min={new Date().toISOString().substr(0, 16)}
           onChange={e => setEndDate(e.target.value)}
         />
       </FormGroup>

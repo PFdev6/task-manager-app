@@ -42,7 +42,14 @@ export const validateLoginForm = (email, password, setError) => {
   return true;
 };
 
-export const validateNewTaskForm = () => {
+export const validateNewTaskForm = (tasks, setError) => {
+  const taskEndDates = tasks.map(task => new Date(task.endDate));
+  const mainEndDate = taskEndDates[0];
+
+  if (!taskEndDates.every(date => date <= mainEndDate)) {
+    setError("Ending of task should be less than ending date of main task");
+    return false;
+  }
   return true;
 };
 

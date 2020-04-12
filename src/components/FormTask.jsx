@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Form, FormGroup, Input } from "reactstrap";
+import { Label, Button, Form, FormGroup, Input } from "reactstrap";
 import ErrorMessage from "./ErrorMessage";
 import useErrorHandler from "../utils/custom-hooks/ErrorHandler";
 import { authContext } from "../contexts/AuthContext";
@@ -9,6 +9,7 @@ import NewTask from "./NewTask";
 
 const FormTask = () => {
   const [subTasks, setSubTasks] = React.useState([]);
+  const [taskOwner, setTaskOwner] = React.useState("");
   const [loading, setLoading] = React.useState(false);
   const auth = React.useContext(authContext);
   const { error, showError } = useErrorHandler(null);
@@ -17,12 +18,17 @@ const FormTask = () => {
     <Form
       onSubmit={e => {
         e.preventDefault();
-        const params = {};
+        const params = { tasks: [] };
         Array.from(e.target.elements).forEach(el => {
-          params[el.name] = el.value;
+          const typeField = el.name.split("_")[0];
+          if (typeField === "header") {
+            params.tasks.push({});
+          }
+
+          params.tasks[params.tasks.length - 1][typeField] = el.value;
         });
 
-        if (validateNewTaskForm()) {
+        if (validateNewTaskForm(params.tasks, showError)) {
           setLoading(true);
         }
       }}
@@ -30,6 +36,21 @@ const FormTask = () => {
       <Header> Create Task </Header>
       <br />
       <NewTask id="main" />
+      <FormGroup>
+        <Label for="taskOwnerSelect">Task Owner</Label>
+        <Input
+          required={true}
+          id="taskOwnerSelect"
+          type="select"
+          placeholder="Task Owner"
+          value={taskOwner}
+          onChange={e => setTaskOwner(e.target.value)}
+          name="taskOwner"
+        >
+          <option>1</option>
+          <option>2</option>
+        </Input>
+      </FormGroup>
       {subTasks.map(subTask => subTask)}
       <Button
         onClick={e => {
