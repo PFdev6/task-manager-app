@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
       content: DataTypes.TEXT,
       group_id: DataTypes.INTEGER,
       user_id: DataTypes.INTEGER,
-      parent_task_id: DataTypes.INTEGER
+      parent_task_id: DataTypes.INTEGER,
+      end_date: DataTypes.DATE
     },
     {}
   );
