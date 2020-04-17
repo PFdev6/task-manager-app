@@ -25,7 +25,8 @@ const FormTask = () => {
       auth.token
     )
       .then(data => {
-        setLoading(false);
+        showError('The task was created successfully.');
+        setTimeout(() => { setLoading(false); }, 3000);
       })
       .catch(err => {
         setLoading(false);
