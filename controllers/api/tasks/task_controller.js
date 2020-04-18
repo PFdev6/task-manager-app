@@ -9,37 +9,42 @@ const createTask = (req, res) => {
   console.log(tasks[0]);
   let mainTask = { ...tasks[0], ...{ type_task: db.Task.MAIN_TASK } };
   mainTask.end_date = mainTask.endDate;
-  const taskOwner = mainTask.taskOwner === "Own" ? { user_id: userId } : { group_id: groupId };
+  const taskOwner =
+    mainTask.taskOwner === "Own" ? { user_id: userId } : { group_id: groupId };
   tasks.reverse().pop();
   const subTasks = tasks;
 
-  db.Task.create({...mainTask, ...taskOwner})
+  db.Task.create({ ...mainTask, ...taskOwner })
     .then(async task => {
       console.log("new Task!!!");
       console.log(task);
       if (subTasks.length !== 0) {
         console.log("new subTasks!!!");
-        
+
         await subTasks.forEach(subTask => {
           subTask.end_date = subTask.endDate;
-          console.log(subTasks)
+          console.log(subTasks);
           db.Task.create({
             ...subTask,
             ...taskOwner,
             ...{ parent_task_id: task.id, type_task: db.Task.SUB_TASK }
-          })
+          });
           console.log("new subTask!!!!!!!");
         });
       }
 
       if (taskOwner.user_id) {
-        await db.User.findOne({ where: { id: taskOwner.user_id } }).then(user => {
-          sendMailNotifications([user], task);
-        });
+        await db.User.findOne({ where: { id: taskOwner.user_id } }).then(
+          user => {
+            sendMailNotifications([user], task);
+          }
+        );
       } else {
-        await db.Group.findOne({ where: { id: taskOwner.group_id } }).then(group => {
-          sendMailNotifications(group.users, task);
-        });
+        await db.Group.findOne({ where: { id: taskOwner.group_id } }).then(
+          group => {
+            sendMailNotifications(group.users, task);
+          }
+        );
       }
       return task;
     })
@@ -58,3 +63,20 @@ const sendMailNotifications = (users, mainTask) => {
 };
 
 module.exports.create = createTask;
+
+const getTasks = (req, res) => {
+  const find_by = req.query.user_id
+    ? { user_id: req.query.user_id }
+    : { group_id: req.query.group_id };
+  if (find_by) {
+    db.Task.findAll({
+      where: find_by
+    }).then(tasks => {
+      res.status(200).send(tasks);
+    });
+  }
+};
+
+module.exports.get = getTasks;
+
+module.exports.get = getTasks;

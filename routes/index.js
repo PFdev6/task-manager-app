@@ -17,9 +17,6 @@ module.exports = app => {
   app.get("/api/confirmUser", c.authentication_controller.confirmUser);
 
   // Tasks
-  app.post(
-    "/api/tasks/create",
-    passport.authenticate("jwt", { session: false }),
-    c.task_controller.create
-  );
+  app.post("/api/tasks/create", secureRoute(), c.task_controller.create);
+  app.get("/api/tasks", secureRoute(), c.task_controller.get);
 };
