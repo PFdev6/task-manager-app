@@ -10,6 +10,14 @@ const TaskContainer = () => {
   const { tasks, setTasks } = React.useContext(taskContext);
   const [loading, setLoading] = React.useState(false);
 
+  const toCompact = (tsks) => {
+    let result = [];
+    for (let i = 0; i < tsks.length; i += 3) {
+      let chunk = tsks.slice(i, i + 3);
+      result.push(chunk);
+    }
+    return result
+  }
   const getUserTasks = async find => {
     setLoading(true);
     let response = await apiRequest(
@@ -19,12 +27,7 @@ const TaskContainer = () => {
       auth.token
     );
     setLoading(false);
-    let result = [];
-    for (let i = 0; i < response.length; i += 3) {
-      let chunk = response.slice(i, i + 3);
-      result.push(chunk);
-    }
-    setTasks({ type: "add", newTasks: result });
+    setTasks({ type: "add", init: true, newTasks: response });
   };
 
   React.useEffect(() => {
@@ -33,7 +36,7 @@ const TaskContainer = () => {
 
   return (
     <Container>
-      {tasks.map((taskChunk, key) => {
+      {toCompact(tasks).map((taskChunk, key) => {
         return (
           <Row key={key}>
             {taskChunk.map(task => {

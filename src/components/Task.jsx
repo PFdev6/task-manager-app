@@ -38,7 +38,9 @@ const Task = props => {
       auth.token
     ).then(dataRes => {
       toggle();
-      setTasks({ type: "update", newTask: dataRes });
+      setTimeout(() => {
+        setTasks({ type: "update", newTask: dataRes });
+      }, 1000);
     });
   };
   const deleteTask = e => {

@@ -7,16 +7,15 @@ const initialState = DEFAULT_TASKS_CONTEXT;
 const reducer = (tasks, action) => {
   switch (action.type) {
     case "add":
+      if (action.init) {
+        return action.newTasks;
+      }
       return [...tasks, ...action.newTasks];
     case "update":
-      return tasks.map(task => {
-        if (task.id === action.newTask.id) {
-          task = action.newTask;
-        }
-        return task;
-      });
+      let result = tasks.filter(task => task.id != Number(action.newTask.id));
+      return [...result, action.newTask];
     case "delete":
-      return tasks.filter(task => task.id != action.taskId);
+      return tasks.filter(task => task.id != Number(action.taskId));
     default:
       throw new Error();
   }
@@ -24,7 +23,7 @@ const reducer = (tasks, action) => {
 
 export const taskContext = React.createContext({
   tasks: [],
-  setTasks: () => {}
+  setTasks: () => { }
 });
 
 const { Provider } = taskContext;
