@@ -69,9 +69,10 @@ export const apiRequest = (url, method, bodyParams, token = null) => {
   if (token !== null) {
     headers.Authorization = `Bearer ${token}`;
   }
+  let body = bodyParams ? { body: JSON.stringify(bodyParams) } : {};
   return fetch(url, {
     method,
     headers: headers,
-    body: bodyParams ? JSON.stringify(bodyParams) : {}
+    ...body
   }).then(res => res.json());
 };

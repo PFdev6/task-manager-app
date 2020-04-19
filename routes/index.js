@@ -18,5 +18,7 @@ module.exports = app => {
 
   // Tasks
   app.post("/api/tasks/create", secureRoute(), c.task_controller.create);
+  app.post("/api/tasks/done", secureRoute(), c.task_controller.done);
+  app.delete("/api/tasks/delete", secureRoute(), c.task_controller.delete);
   app.get("/api/tasks", secureRoute(), c.task_controller.get);
 };

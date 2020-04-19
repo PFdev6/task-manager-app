@@ -2,6 +2,7 @@ const db = require("../../../models");
 const mailer = require("../../../services/mailer");
 const jwt = require("jsonwebtoken");
 const schedule = require("node-schedule");
+const Sequelize = require("sequelize");
 
 const createTask = (req, res) => {
   console.log(req.body);
@@ -70,7 +71,8 @@ const getTasks = (req, res) => {
     : { group_id: req.query.group_id };
   if (find_by) {
     db.Task.findAll({
-      where: find_by
+      where: { ...find_by, parent_task_id: null },
+      include: [{ model: db.Task, as: "subTasks" }]
     }).then(tasks => {
       res.status(200).send(tasks);
     });
@@ -79,4 +81,36 @@ const getTasks = (req, res) => {
 
 module.exports.get = getTasks;
 
-module.exports.get = getTasks;
+const taskDone = (req, res) => {
+  console.log(req.body);
+  const { taskId } = req.body;
+  db.Task.update(
+    {
+      end_date: new Date()
+    },
+    {
+      where: Sequelize.or({ id: taskId }, { parent_task_id: taskId })
+    }
+  ).then(numUpdated => {
+    db.Task.findOne({
+      where: { id: taskId },
+      include: [{ model: db.Task, as: "subTasks" }]
+    }).then(task => {
+      res.status(200).send(task);
+    });
+  });
+};
+
+module.exports.done = taskDone;
+
+const deleteTask = (req, res) => {
+  console.log(req.body);
+  const { taskId } = req.body;
+  db.Task.destroy({
+    where: Sequelize.or({ id: taskId }, { parent_task_id: taskId })
+  }).then(() => {
+    res.status(200).send({ message: "Complete" });
+  });
+};
+
+module.exports.delete = deleteTask;
