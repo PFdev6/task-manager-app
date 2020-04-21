@@ -53,6 +53,10 @@ export const validateNewTaskForm = (tasks, setError) => {
   return true;
 };
 
+export const validateGroupForm = () => {
+  return true;
+};
+
 export const getStoredUserAuth = () => {
   const auth = window.localStorage.getItem("UserAuth");
   if (auth) {

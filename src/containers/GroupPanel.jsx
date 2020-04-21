@@ -1,7 +1,11 @@
 import * as React from "react";
+import FormGroup from "../components/FormGroup";
+import { authContext } from "../contexts/AuthContext";
+import GroupContainer from "./GroupContainer";
 
 const GroupPanel = () => {
-	return <>Group</>;
+  const auth = React.useContext(authContext).auth;
+  return auth.group_id !== undefined ? <GroupContainer /> : <FormGroup />;
 };
 
 export default GroupPanel;
