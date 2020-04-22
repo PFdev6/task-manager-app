@@ -25,6 +25,11 @@ module.exports = app => {
   // Groups
   app.post("/api/groups/create", secureRoute(), c.group_controller.create);
   app.get("/api/groups/:id/users", secureRoute(), c.group_controller.getUsers);
+  app.post(
+    "/api/groups/confirmInvite",
+    secureRoute(),
+    c.group_controller.confirmInvite
+  );
   app.delete(
     "/api/groups/:id/users/:user_id/kick",
     secureRoute(),

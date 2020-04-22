@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       message: DataTypes.STRING,
       time: DataTypes.DATE,
+      type: DataTypes.STRING,
+      user_id: DataTypes.INTEGER,
       task_id: DataTypes.INTEGER
     },
     {}
@@ -13,7 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     Notification.belongsTo(models.Task, {
       foreignKey: "task_id"
     });
+
+    Notification.belongsTo(models.User, {
+      foreignKey: "user_id"
+    });
   };
+
   return Notification;
 };
-
