@@ -28,9 +28,9 @@ module.exports.create = createGroup;
 
 const getGroupUsers = (req, res) => {
   console.log(req.params);
-  const { groupId } = req.params;
+  const { id } = req.params;
 
-  db.User.findAll({ where: { group_id: groupId } }).then(users => {
+  db.User.findAll({ where: { group_id: id } }).then(users => {
     res.status(200).send(users);
   });
 };
@@ -38,7 +38,7 @@ const getGroupUsers = (req, res) => {
 module.exports.getUsers = getGroupUsers;
 
 const kickUser = (req, res) => {
-  const { id, user_id } = req.params.body;
+  const { id, user_id } = req.params;
   db.User.update({ group_id: null }, { where: { id: user_id } }).then(
     updateInfo => {
       if (updateInfo === 1) {
@@ -52,19 +52,23 @@ const kickUser = (req, res) => {
 
 module.exports.kick = kickUser;
 
-const inviteUser = (req, res) => {
-  const { email, id } = req.body.params;
-  const user = db.User.findOne({ where: { email: email } });
-  if (user) {
+const inviteUser = async (req, res) => {
+  console.log(req.params);
+  console.log(req.body);
+  const { id } = req.params;
+  const { email } = req.body;
+  const user = await db.User.findOne({ where: { email: email } });
+  console.log(user);
+  if (user !== null) {
     token = jwt.sign(
       { group_id: id, email: email },
       process.env.JWT_PRIVATE_KEY
     );
     db.Notification.create({ type: "invite", message: token }).then(notif => {
-      res.send(200).send(notif);
+      res.status(200).send({ notification: notif });
     });
   } else {
-    res.status(404).send({ message: "User not found" });
+    res.status(400).send({ message: "User not found" });
   }
 };
 

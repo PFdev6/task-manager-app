@@ -1,5 +1,15 @@
 import * as React from "react";
-import { Label, Button, Card, CardTitle, Input, CardText } from "reactstrap";
+import {
+  Row,
+  Col,
+  Container,
+  Label,
+  Button,
+  Card,
+  CardTitle,
+  Input,
+  CardText
+} from "reactstrap";
 import ErrorMessage from "../components/ErrorMessage";
 import useErrorHandler from "../utils/custom-hooks/ErrorHandler";
 import { authContext } from "../contexts/AuthContext";
@@ -10,6 +20,7 @@ const GroupContainer = () => {
   const { auth } = React.useContext(authContext);
   const [users, setUsers] = React.useState([]);
   const [invitedUser, setInvitedUser] = React.useState("");
+  const { error, showError } = useErrorHandler(null);
 
   const toCompact = listUsers => {
     let result = [];
@@ -27,7 +38,6 @@ const GroupContainer = () => {
       null,
       auth.token
     );
-    setLoading(false);
     setUsers(response);
   };
 
@@ -42,12 +52,23 @@ const GroupContainer = () => {
   };
 
   const inviteUser = () => {
+    if (invitedUser.replace(/\s/g, "") === "") {
+      return showError("Empty text");
+    }
+
     apiRequest(
-      `/api/groups/${auth.group_id}/users/inviteUser`,
+      `/api/groups/${auth.group_id}/users/invite`,
       "post",
       { email: invitedUser },
       auth.token
-    );
+    ).then(data => {
+      if (data.notification) {
+        showError("User was invited");
+      }
+      if (data.message) {
+        showError(data.message);
+      }
+    });
   };
 
   React.useEffect(() => {
@@ -68,10 +89,19 @@ const GroupContainer = () => {
             name="email"
           />
         </Col>
-        <Button onClick={inviteUser} block={true}>
-          {" "}
-          Invite{" "}
-        </Button>
+      </Row>
+      <Row>
+        <Col>{error && <ErrorMessage errorMessage={error} />} </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Button style={{ margin: 10 }} onClick={inviteUser} block={true}>
+            Invite
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Label> Users </Label>
       </Row>
       {toCompact(users).map((usersChunk, key) => {
         return (
@@ -84,8 +114,7 @@ const GroupContainer = () => {
                     <CardText> {user.email}</CardText>
                     {user.id !== auth.id ? (
                       <Button onClick={kickUser} name={user.id}>
-                        {" "}
-                        Kick{" "}
+                        Kick
                       </Button>
                     ) : null}
                   </Card>
