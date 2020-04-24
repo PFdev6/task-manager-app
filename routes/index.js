@@ -40,4 +40,21 @@ module.exports = app => {
     secureRoute(),
     c.group_controller.invite
   );
+  app.delete(
+    "/api/groups/:id/delete",
+    secureRoute(),
+    c.group_controller.delete
+  );
+
+  // Notifications
+  app.get(
+    "/api/user/:userId/notifications/",
+    secureRoute(),
+    c.notification_controller.get
+  );
+  app.get(
+    "/api/task/:taskId/notifications/",
+    secureRoute(),
+    c.notification_controller.get
+  );
 };

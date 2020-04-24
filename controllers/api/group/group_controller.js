@@ -90,3 +90,12 @@ const confirmInviteToGroup = (req, res) => {
 };
 
 module.exports.confirmInvite = confirmInviteToGroup;
+
+const deleteGroup = (req, res) => {
+  const { id } = req.params;
+  db.Group.destroy({ where: { id: id } }).then(numDeletedGroup => {
+    res.status(200).send({ message: "Deleted" });
+  });
+};
+
+module.exports.delete = deleteGroup;
