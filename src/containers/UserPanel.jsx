@@ -35,7 +35,7 @@ const UserPanel = () => {
     });
   };
 
-  const deleteGroup = auth.group_id ? (
+  const deleteGroupButton = auth.group_id ? (
     <Row>
       <Col>
         <Button
@@ -74,7 +74,7 @@ const UserPanel = () => {
 
   return (
     <Container>
-      {deleteGroup}
+      {deleteGroupButton}
       {toCompact(notifications)}
     </Container>
   );

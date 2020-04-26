@@ -2,22 +2,26 @@ import * as React from "react";
 import { taskContext } from "../contexts/TaskContext";
 import { authContext } from "../contexts/AuthContext";
 import Task from "../components/Task";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Button, Row, Col } from "reactstrap";
 import { apiRequest } from "../utils/Helpers";
 
 const TaskContainer = () => {
   const { auth } = React.useContext(authContext);
   const { tasks, setTasks } = React.useContext(taskContext);
   const [loading, setLoading] = React.useState(false);
-
-  const toCompact = (tsks) => {
+  const [typeTask, setTypeTask] = React.useState(true);
+  const [changeButtonLabel, setChangeButtonLabel] = React.useState(
+    "Group Tasks"
+  );
+  const toCompact = tsks => {
     let result = [];
     for (let i = 0; i < tsks.length; i += 3) {
       let chunk = tsks.slice(i, i + 3);
       result.push(chunk);
     }
-    return result
-  }
+    return result;
+  };
+
   const getUserTasks = async find => {
     setLoading(true);
     let response = await apiRequest(
@@ -30,12 +34,30 @@ const TaskContainer = () => {
     setTasks({ type: "add", init: true, newTasks: response });
   };
 
+  const changeTask = () => {
+    if (typeTask) {
+      getUserTasks({ by: "group_id", id: auth.group_id });
+      setChangeButtonLabel("User Tasks");
+    } else {
+      getUserTasks({ by: "user_id", id: auth.id });
+      setChangeButtonLabel("Group Tasks");
+    }
+    setTypeTask(!typeTask);
+  };
+
   React.useEffect(() => {
     getUserTasks({ by: "user_id", id: auth.id });
   }, []);
 
   return (
     <Container>
+      {auth.group_id ? (
+        <Row>
+          <Col>
+            <Button onClick={changeTask}>{changeButtonLabel}</Button>
+          </Col>
+        </Row>
+      ) : null}
       {toCompact(tasks).map((taskChunk, key) => {
         return (
           <Row key={key}>

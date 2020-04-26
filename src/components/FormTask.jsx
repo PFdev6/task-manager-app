@@ -13,7 +13,7 @@ const FormTask = () => {
   const [loading, setLoading] = React.useState(false);
   const auth = React.useContext(authContext).auth;
   const { error, showError } = useErrorHandler(null);
-  const groupOption = auth.group_id ? <Option> Group </Option> : null;
+  const formOptions = auth.group_id ? ["Own", "Group"] : ["Own"];
   const createTaskHandler = params => {
     setLoading(true);
     apiRequest(
@@ -25,8 +25,10 @@ const FormTask = () => {
       auth.token
     )
       .then(data => {
-        showError('The task was created successfully.');
-        setTimeout(() => { setLoading(false); }, 3000);
+        showError("The task was created successfully.");
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
       })
       .catch(err => {
         setLoading(false);
@@ -68,8 +70,9 @@ const FormTask = () => {
           onChange={e => setTaskOwner(e.target.value)}
           name="taskOwner"
         >
-          <option>Own</option>
-          {groupOption}
+          {formOptions.map((el, ind) => {
+            return <option key={ind}> {el} </option>;
+          })}
         </Input>
       </FormGroup>
       {subTasks.map(subTask => subTask)}
