@@ -30,6 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: "group_id"
     });
 
+    User.hasMany(models.Notification, {
+      foreignKey: "user_id",
+      as: "notifications"
+    });
+
     User.hasOne(models.Group, {
       foreignKey: "admin_id",
       as: "admin"

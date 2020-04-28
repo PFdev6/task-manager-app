@@ -75,7 +75,10 @@ const UserPanel = () => {
   return (
     <Container>
       {deleteGroupButton}
-      {toCompact(notifications)}
+      <Header> Your Notifications </Header>
+      {toCompact(notifications).map(note => {
+        return node.id;
+      })}
     </Container>
   );
 };

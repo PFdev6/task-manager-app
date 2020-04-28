@@ -9,7 +9,7 @@ const getNotifications = (req, res) => {
   const whereCondition = req.params;
 
   if (whereCondition) {
-    db.Task.findAll({
+    db.Notification.findAll({
       where: whereCondition,
       include: [
         { model: db.User, as: "user" },

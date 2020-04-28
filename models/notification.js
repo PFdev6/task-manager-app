@@ -13,11 +13,13 @@ module.exports = (sequelize, DataTypes) => {
   );
   Notification.associate = function(models) {
     Notification.belongsTo(models.Task, {
-      foreignKey: "task_id"
+      foreignKey: "task_id",
+      as: "task"
     });
 
     Notification.belongsTo(models.User, {
-      foreignKey: "user_id"
+      foreignKey: "user_id",
+      as: "user"
     });
   };
 

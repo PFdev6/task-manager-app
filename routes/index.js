@@ -48,12 +48,12 @@ module.exports = app => {
 
   // Notifications
   app.get(
-    "/api/user/:userId/notifications/",
+    "/api/user/:user_id/notifications/",
     secureRoute(),
     c.notification_controller.get
   );
   app.get(
-    "/api/task/:taskId/notifications/",
+    "/api/task/:task_id/notifications/",
     secureRoute(),
     c.notification_controller.get
   );
