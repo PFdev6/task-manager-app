@@ -2,6 +2,11 @@ module.exports = sockets => {
   sockets.on("connection", () => {
     console.info("--- User Connected ---");
   });
+  
+  sockets.on("disconnect", () => {
+    console.info("--- User Disconnected ---");
+  });
+
 
   const sendNote = (userId, data) => {
     sockets.emit(userId, data);

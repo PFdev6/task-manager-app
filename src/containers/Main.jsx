@@ -4,7 +4,6 @@ import TaskPanel from "./TaskPanel";
 import GroupPanel from "./GroupPanel";
 import UserPanel from "./UserPanel";
 import SideNav, { NavItem, NavIcon, NavText } from "@trendmicro/react-sidenav";
-import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import { authContext } from "../contexts/AuthContext";
 
 const Main = () => {
@@ -23,7 +22,7 @@ const Main = () => {
         <SideNav.Nav defaultSelected="">
           <NavItem eventKey="userInfo">
             <NavIcon>
-              <i className="fa fa-fw fa-home" style={{ fontSize: "0.75em" }} />
+              <i className="fa fa-fw fa-at" style={{ fontSize: "0.75em" }} />
             </NavIcon>
 
             <NavText style={{ fontSize: "1.0em" }}>
@@ -41,7 +40,7 @@ const Main = () => {
           <NavItem eventKey="groups">
             <NavIcon>
               <i
-                className="fa fa-fw fa-device"
+                className="fa fa-fw fa-object-group"
                 style={{ fontSize: "1.75em" }}
               />
             </NavIcon>
@@ -51,10 +50,7 @@ const Main = () => {
           </NavItem>
           <NavItem eventKey="users">
             <NavIcon>
-              <i
-                className="fa fa-fw fa-device"
-                style={{ fontSize: "1.75em" }}
-              />
+              <i className="fa fa-fw fa-users" style={{ fontSize: "1.75em" }} />
             </NavIcon>
             <NavText>
               <Link to="/users"> User </Link>
@@ -62,7 +58,10 @@ const Main = () => {
           </NavItem>
           <NavItem eventKey="logout">
             <NavIcon>
-              <i className="fa fa-fw fa-home" style={{ fontSize: "1.75em" }} />
+              <i
+                className="fa fa-fw fa-sign-out"
+                style={{ fontSize: "1.75em" }}
+              />
             </NavIcon>
             <NavText> Logout </NavText>
           </NavItem>
