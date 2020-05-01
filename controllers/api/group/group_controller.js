@@ -64,7 +64,11 @@ const inviteUser = async (req, res) => {
       { group_id: id, email: email },
       process.env.JWT_PRIVATE_KEY
     );
-    db.Notification.create({ type: "invite", message: token }).then(notif => {
+    db.Notification.create({
+      user_id: user.id,
+      type: "invite",
+      message: token
+    }).then(notif => {
       res.status(200).send({ notification: notif });
     });
   } else {
@@ -91,8 +95,9 @@ const confirmInviteToGroup = (req, res) => {
 
 module.exports.confirmInvite = confirmInviteToGroup;
 
-const deleteGroup = (req, res) => {
+const deleteGroup = async (req, res) => {
   const { id } = req.params;
+  await db.User.update({ group_id: null }, { where: { group_id: id } });
   db.Group.destroy({ where: { id: id } }).then(numDeletedGroup => {
     res.status(200).send({ message: "Deleted" });
   });

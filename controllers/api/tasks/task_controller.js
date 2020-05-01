@@ -58,6 +58,12 @@ const sendMailNotifications = (users, mainTask) => {
   console.log(date);
   users.forEach(user => {
     schedule.scheduleJob(date, () => {
+      db.Notifiction.create({
+        user_id: user.id,
+        task_id: mainTask.id,
+        type: "task_finished",
+        message: `Task ${mainTask.header} finished`
+      });
       mailer.notifyToTask(user, mainTask);
     });
   });
@@ -95,7 +101,31 @@ const taskDone = (req, res) => {
     db.Task.findOne({
       where: { id: taskId },
       include: [{ model: db.Task, as: "subTasks" }]
-    }).then(task => {
+    }).then(async task => {
+      if (task.user_id !== null) {
+        await db.Notifiction.create({
+          user_id: task.user_id,
+          task_id: task.id,
+          type: "task_finished",
+          message: `Task ${task.header} finished`
+        });
+      }
+      if (task.group_id !== null) {
+        await db.User.findAll({
+          where: {
+            group_id: note.group_id
+          }
+        }).then(users => {
+          users.forEach(async user => {
+            await db.Notifiction.create({
+              user_id: user.id,
+              task_id: task.id,
+              type: "task_finished",
+              message: `Task ${task.header} finished`
+            });
+          });
+        });
+      }
       res.status(200).send(task);
     });
   });

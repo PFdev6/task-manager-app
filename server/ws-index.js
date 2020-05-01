@@ -16,10 +16,7 @@ module.exports = sockets => {
   };
 
   schedule.scheduleJob("*/1 * * * *", () => {
-    console.log("-------------Notification Job----------------");
-    let oneMinuteBeforeTimeNow = new Date();
-    oneMinuteBeforeTimeNow.setMinutes(oneMinuteBeforeTimeNow.getMinutes() - 1);
-    console.log(oneMinuteBeforeTimeNow.toString());
+    console.log("-------------Notifiction Job----------------");
 
     db.Notification.findAll({
       where: Sequelize.literal(
@@ -31,7 +28,7 @@ module.exports = sockets => {
           sendNote(note.user_id, note);
         }
         if (note.group_id !== null) {
-          db.Sequelize.User.findAll({
+          db.User.findAll({
             where: {
               group_id: note.group_id
             }
@@ -42,10 +39,4 @@ module.exports = sockets => {
       });
     });
   });
-
-  // add schedule
-  //setInterval(() => {
-  //  console.log("message ==================");
-  //  sendNote(30, { message: "helo" });
-  //}, 5000);
 };
