@@ -18,13 +18,12 @@ const createTask = (req, res) => {
   db.Task.create({ ...mainTask, ...taskOwner })
     .then(async task => {
       console.log("new Task!!!");
-      console.log(task);
+      console.log(task.end_date);
       if (subTasks.length !== 0) {
         console.log("new subTasks!!!");
 
         await subTasks.forEach(subTask => {
           subTask.end_date = subTask.endDate;
-          console.log(subTasks);
           db.Task.create({
             ...subTask,
             ...taskOwner,
@@ -37,34 +36,52 @@ const createTask = (req, res) => {
       if (taskOwner.user_id) {
         await db.User.findOne({ where: { id: taskOwner.user_id } }).then(
           user => {
+            console.log("-----------send to user --------------");
             sendMailNotifications([user], task);
           }
         );
       } else {
-        await db.Group.findOne({ where: { id: taskOwner.group_id } }).then(
-          group => {
-            sendMailNotifications(group.users, task);
-          }
-        );
+        await db.Group.findOne({
+          where: { id: taskOwner.group_id },
+          include: [{ model: db.User, as: "users" }]
+        }).then(group => {
+          console.log("-----------send to group --------------");
+          sendMailNotifications(group.users, task);
+        });
       }
       return task;
     })
     .then(task => res.status(200).send(task))
-    .catch(error => res.status(400).send(error));
+    .catch(error => {
+      console.log("-------------------------");
+      console.log(error);
+      console.log("-------------------------");
+      res.status(400).send(error);
+    });
 };
 
 const sendMailNotifications = (users, mainTask) => {
   const date = new Date(mainTask.end_date);
+  console.log("----------notification-schedule---------------");
   console.log(date);
-  users.forEach(user => {
+  users.forEach((user, index) => {
+    if (index > 0) {
+      db.Notification.create({
+        user_id: user.id,
+        task_id: mainTask.id,
+        type: "task_started",
+        message: `You've a new ${mainTask.header} task`
+      });
+    }
     schedule.scheduleJob(date, () => {
-      db.Notifiction.create({
+      console.log("SENDING NOTIFICATION");
+      db.Notification.create({
         user_id: user.id,
         task_id: mainTask.id,
         type: "task_finished",
         message: `Task ${mainTask.header} finished`
       });
-      mailer.notifyToTask(user, mainTask);
+      mailer.notifyToTask(user.email, mainTask);
     });
   });
 };
@@ -103,7 +120,7 @@ const taskDone = (req, res) => {
       include: [{ model: db.Task, as: "subTasks" }]
     }).then(async task => {
       if (task.user_id !== null) {
-        await db.Notifiction.create({
+        await db.Notification.create({
           user_id: task.user_id,
           task_id: task.id,
           type: "task_finished",
@@ -113,11 +130,11 @@ const taskDone = (req, res) => {
       if (task.group_id !== null) {
         await db.User.findAll({
           where: {
-            group_id: note.group_id
+            group_id: task.group_id
           }
         }).then(users => {
           users.forEach(async user => {
-            await db.Notifiction.create({
+            await db.Notification.create({
               user_id: user.id,
               task_id: task.id,
               type: "task_finished",

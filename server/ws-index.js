@@ -25,16 +25,8 @@ module.exports = sockets => {
     }).then(notes => {
       notes.forEach(note => {
         if (note.user_id !== null) {
+          console.log(`Sending note to user --> id: ${note.user_id}`);
           sendNote(note.user_id, note);
-        }
-        if (note.group_id !== null) {
-          db.User.findAll({
-            where: {
-              group_id: note.group_id
-            }
-          }).then(users => {
-            users.forEach(user => sendNote(user.id, note));
-          });
         }
       });
     });

@@ -112,7 +112,7 @@ const GroupContainer = () => {
                   <Card body>
                     <CardTitle>{user.username}</CardTitle>
                     <CardText> {user.email}</CardText>
-                    {user.id !== auth.id ? (
+                    {auth.isAdminGroup ? (
                       <Button onClick={kickUser} name={user.id}>
                         Kick
                       </Button>

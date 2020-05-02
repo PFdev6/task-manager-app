@@ -73,7 +73,9 @@ const Task = props => {
           More...
         </Button>
       </CardBody>
-      <CardFooter> End Date: {data.end_date}</CardFooter>
+      <CardFooter>
+        Expire In: {new Date(data.end_date).toLocaleString()}
+      </CardFooter>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>{data.header}</ModalHeader>
         <ModalBody>

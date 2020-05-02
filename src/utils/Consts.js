@@ -3,5 +3,6 @@ export const DEFAULT_USER_AUTH = {
   email: "",
   token: "",
   username: "",
+  isAdminGroup: false,
   group_id: ""
 };

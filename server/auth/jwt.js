@@ -35,11 +35,14 @@ passport.use(
       passwordField: "password"
     },
     (email, password, done) => {
-      db.User.findOne({ where: { email: email } }).then(user => {
+      db.User.findOne({
+        where: { email: email },
+        include: [{ model: db.Group }]
+      }).then(user => {
         if (user === null) {
           return done(null, false, { messages: ["User not found"] });
         }
-        console.log(password);
+        console.log(user);
         bcrypt.compare(password, user.password, (err, isMatch) => {
           console.log(isMatch);
           if (isMatch && user.confirmation_date) {

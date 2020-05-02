@@ -58,7 +58,8 @@ const loginV2 = (req, res, next) => {
           id: user.id,
           email: user.email,
           username: user.username,
-          groupId: user.group_id !== "" ? user.group_id : ""
+          isAdminGroup: user.group_id ? user.Group.admin_id == user.id : false,
+          group_id: user.group_id !== "" ? user.group_id : ""
         };
         const token = jwt.sign({ user: body }, process.env.JWT_PRIVATE_KEY);
         return res.json(Object.assign(body, { token: token }));

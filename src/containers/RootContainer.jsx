@@ -18,9 +18,13 @@ const RootContainer = () => {
       client.disconnect();
     }
     if (note !== null) {
+      let noteMessage =
+        note.type === "invite"
+          ? "You've invitation to group. Check notifications in User Panel"
+          : note.message;
       store.addNotification({
-        title: "Task Update",
-        message: note.message || "qwe",
+        title: "Updatting",
+        message: noteMessage,
         type: "info",
         insert: "top",
         container: "top-right",

@@ -37,8 +37,13 @@ const getGroupUsers = (req, res) => {
 
 module.exports.getUsers = getGroupUsers;
 
-const kickUser = (req, res) => {
+const kickUser = async (req, res) => {
   const { id, user_id } = req.params;
+  await db.Notification.create({
+    user_id: user_id,
+    type: "kick",
+    message: `You were kicked from group ${id}`
+  });
   db.User.update({ group_id: null }, { where: { id: user_id } }).then(
     updateInfo => {
       if (updateInfo === 1) {
@@ -79,13 +84,17 @@ const inviteUser = async (req, res) => {
 module.exports.invite = inviteUser;
 
 const confirmInviteToGroup = (req, res) => {
-  const { token } = req.body.params;
+  console.log(req.body);
+  const { token, id } = req.body;
   const decoded = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
   const { group_id, email } = decoded;
   db.User.update({ group_id: group_id }, { where: { email: email } }).then(
-    updateInfo => {
-      if (updateInfo === 1) {
-        res.status(200).send({ message: "Complete" });
+    async updateInfo => {
+      console.log("------------Update Group Id----------------");
+      console.log(updateInfo[0]);
+      await db.Notification.destroy({ where: { id: id } });
+      if (updateInfo[0] === 1) {
+        res.status(200).send(group_id);
       } else {
         res.status(400).send({ message: "Oops" });
       }
