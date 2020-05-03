@@ -9,8 +9,8 @@ import ReactNotification from "react-notifications-component";
 import { store } from "react-notifications-component";
 
 const RootContainer = () => {
-  const url = "localhost:8000";
-  const { auth } = React.useContext(authContext);
+  const url = window.location.href;
+  const { auth, setAuthStatus } = React.useContext(authContext);
   const { note, isConnected, client } = useSocket(url, auth.id);
 
   React.useEffect(() => {
@@ -22,6 +22,13 @@ const RootContainer = () => {
         note.type === "invite"
           ? "You've invitation to group. Check notifications in User Panel"
           : note.message;
+
+      if (note.type === "kick") {
+        let newAuth = auth;
+        newAuth.group_id = null;
+        setAuthStatus(newAuth);
+      }
+
       store.addNotification({
         title: "Updatting",
         message: noteMessage,

@@ -48,7 +48,10 @@ const GroupContainer = () => {
       "delete",
       null,
       auth.token
-    );
+    ).then(() => {
+      let newUsers = users.filter(user => user.id !== Number(user_id));
+      setUsers(newUsers);
+    });
   };
 
   const inviteUser = () => {
@@ -112,7 +115,7 @@ const GroupContainer = () => {
                   <Card body>
                     <CardTitle>{user.username}</CardTitle>
                     <CardText> {user.email}</CardText>
-                    {auth.isAdminGroup ? (
+                    {auth.isAdminGroup && auth.id !== user.id ? (
                       <Button onClick={kickUser} name={user.id}>
                         Kick
                       </Button>

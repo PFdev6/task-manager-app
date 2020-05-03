@@ -86,9 +86,11 @@ const UserPanel = () => {
       if (data.message) {
         showError(data.message);
       } else {
+        let newNotes = notifications.filter(note => note.id !== Number(id));
         showError("Confirmed");
         let newAuth = auth;
-        newAuth.group_id = group_id;
+        newAuth.group_id = data;
+        setNotification(newNotes);
         setAuthStatus(newAuth);
       }
     });
