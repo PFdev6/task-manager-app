@@ -13,7 +13,8 @@ import {
   CardBody,
   Toast,
   ToastBody,
-  ToastHeader
+  ToastHeader,
+  Badge
 } from "reactstrap";
 import { apiRequest } from "../utils/Helpers";
 import { authContext } from "../contexts/AuthContext";
@@ -27,22 +28,36 @@ const Task = props => {
   const toggle = () => setModal(!modal);
   const { tasks, setTasks } = React.useContext(taskContext);
   const isFinished = end_date => {
-    return new Date(end_date) <= new Date();
+    return new Date(end_date) < new Date();
   };
 
   const taskDone = e => {
-    apiRequest(
-      `/api/tasks/done`,
-      "post",
-      { taskId: e.target.value },
-      auth.token
-    ).then(dataRes => {
-      toggle();
-      setTimeout(() => {
-        setTasks({ type: "update", newTask: dataRes });
-      }, 1000);
-    });
+    let id = e.target.value;
+    let type = e.target.name;
+
+    apiRequest(`/api/tasks/done`, "post", { taskId: id }, auth.token).then(
+      dataRes => {
+        toggle();
+        let newData = dataRes;
+        if (type === "subTask") {
+          let subtasks = data.subTasks.map(task => {
+            if (task.id === Number(id)) {
+              task.end_date = new Date();
+            }
+            return task;
+          });
+          newData = data;
+          newData.subTasks = subtasks;
+          setData(newData);
+        }
+
+        setTimeout(() => {
+          setTasks({ type: "update", newTask: newData });
+        }, 1000);
+      }
+    );
   };
+
   const deleteTask = e => {
     const taskId = e.target.value;
     apiRequest(
@@ -74,7 +89,9 @@ const Task = props => {
         </Button>
       </CardBody>
       <CardFooter>
-        Expire In: {new Date(data.end_date).toLocaleString()}
+        <Badge color="warning" style={{ margin: 3 }}>
+          Expire In: {new Date(data.end_date).toLocaleString()}
+        </Badge>
       </CardFooter>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader toggle={toggle}>{data.header}</ModalHeader>
@@ -91,16 +108,31 @@ const Task = props => {
             return (
               <div key={key} className="p-3 bg-primary my-2 rounded">
                 <Toast>
-                  <ToastHeader>{subTask.header}</ToastHeader>
+                  <ToastHeader>
+                    {subTask.header}
+                    {isFinished(subTask.end_date) ? (
+                      <Badge style={{ marginLeft: 5 }} color="success" pill>
+                        Done
+                      </Badge>
+                    ) : null}
+                  </ToastHeader>
                   <ToastBody>{subTask.content}</ToastBody>
-                  <Button
-                    color="primary"
-                    disabled={isFinished(subTask.end_date)}
-                    value={subTask.id}
-                    onClick={taskDone}
-                  >
-                    +
-                  </Button>
+                  <ToastBody>
+                    <Button
+                      size="sm"
+                      outline
+                      color="primary"
+                      disabled={isFinished(subTask.end_date)}
+                      value={subTask.id}
+                      name="subTask"
+                      onClick={taskDone}
+                    >
+                      SubDone
+                    </Button>
+                    <Badge color="warning" style={{ margin: 3 }}>
+                      Expire In: {new Date(subTask.end_date).toLocaleString()}
+                    </Badge>
+                  </ToastBody>
                 </Toast>
               </div>
             );

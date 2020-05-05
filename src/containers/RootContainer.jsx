@@ -30,7 +30,7 @@ const RootContainer = () => {
       }
 
       store.addNotification({
-        title: "Updatting",
+        title: "Updating",
         message: noteMessage,
         type: "info",
         insert: "top",
