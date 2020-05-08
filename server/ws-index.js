@@ -3,12 +3,11 @@ const db = require("../models");
 const Sequelize = require("sequelize");
 
 module.exports = sockets => {
-  sockets.on("connection", () => {
+  sockets.on("connection", (client) => {
     console.info("--- User Connected ---");
-  });
-
-  sockets.on("disconnect", () => {
-    console.info("--- User Disconnected ---");
+    client.on("disconnect", () => {
+      console.info("--- User Disconnected ---");
+    });
   });
 
   const sendNote = (userId, data) => {

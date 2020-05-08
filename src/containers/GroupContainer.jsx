@@ -8,7 +8,8 @@ import {
   Card,
   CardTitle,
   Input,
-  CardText
+  CardText,
+  Badge
 } from "reactstrap";
 import ErrorMessage from "../components/ErrorMessage";
 import useErrorHandler from "../utils/custom-hooks/ErrorHandler";
@@ -104,7 +105,13 @@ const GroupContainer = () => {
         </Col>
       </Row>
       <Row>
-        <Label> Users </Label>
+      <Label>
+        Users
+
+        <Badge style={{ margin: 10 }} color="secondary">
+          In Group {auth.groupName}
+        </Badge>
+      </Label>
       </Row>
       {toCompact(users).map((usersChunk, key) => {
         return (

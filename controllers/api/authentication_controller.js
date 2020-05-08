@@ -45,20 +45,22 @@ const loginV1 = (req, res) => {
 const loginV2 = (req, res, next) => {
   passport.authenticate("login", (err, user, info) => {
     try {
-      console.log(err);
       if (err !== null) {
         console.log("500 error login <--------------------");
         const error = new Error("An Error occurred");
         return next(error);
       }
+      console.log("Is Admin Group?");
       if (user === false) return res.json(info);
       req.login(user, { session: false }, error => {
         if (error) return next(error);
+        console.log(user.Group.admin_id === user.id);
         const body = {
           id: user.id,
           email: user.email,
           username: user.username,
-          isAdminGroup: user.group_id ? user.Group.admin_id == user.id : false,
+          isAdminGroup: user.group_id ? user.Group.admin_id === user.id : false,
+          groupName: user.group_id ? user.Group.name : "",
           group_id: user.group_id !== "" ? user.group_id : ""
         };
         const token = jwt.sign({ user: body }, process.env.JWT_PRIVATE_KEY);

@@ -53,7 +53,7 @@ const UserPanel = () => {
       <Col>
         <h3>
           You are admin in group ->
-          <Badge color="secondary">{auth.group_id}</Badge>
+          <Badge color="secondary">{auth.groupName}</Badge>
         </h3>
       </Col>
     </Row>
@@ -64,7 +64,7 @@ const UserPanel = () => {
           {auth.group_id ? (
             <div>
               You are member of group ->
-              <Badge color="secondary">{auth.group_id}</Badge>
+              <Badge color="secondary">{auth.groupName}</Badge>
             </div>
           ) : (
             "You're not a member of the group"

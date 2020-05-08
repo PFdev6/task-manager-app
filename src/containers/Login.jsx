@@ -20,7 +20,7 @@ const Login = () => {
       password: userPassword
     })
       .then(userData => {
-        const { id, email, token, username, isAdminGroup, group_id } = userData;
+        const { id, email, token, username, isAdminGroup, groupName, group_id } = userData;
         if (token) {
           auth.setAuthStatus({
             id,
@@ -28,6 +28,7 @@ const Login = () => {
             token,
             username,
             isAdminGroup,
+            groupName,
             group_id
           });
         }
