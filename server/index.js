@@ -10,9 +10,27 @@ const routes = require("../routes/index");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const wsRoutes = require("./ws-index");
+const multer = require('multer');
 
 console.log(process.env.AUTH_TYPE);
 require(`./auth/${process.env.AUTH_TYPE}`);
+
+// File Storage
+const Storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+      callback(null, "./Images");
+  },
+  filename: (req, file, callback) => {
+      callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
+  }
+});
+app.use((req, res, next) => {
+  req.uploadFile = multer({
+    storage: Storage
+  }).array("imgUploader", 3);
+  
+  next()
+})
 
 // HTTP APP
 app.use(bodyParser.json());
