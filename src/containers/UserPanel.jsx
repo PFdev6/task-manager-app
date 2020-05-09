@@ -24,6 +24,7 @@ const UserPanel = () => {
   const { auth, setAuthStatus } = React.useContext(authContext);
   const [notifications, setNotification] = React.useState([]);
   const { error, showError } = useErrorHandler(null);
+  const [buttonPanel, setButtonPanel] = React.useState(null);
 
   const deleteGroup = e => {
     let group_id = e.target.name;
@@ -32,49 +33,15 @@ const UserPanel = () => {
       "delete",
       null,
       auth.token
-    ).then(() => {
+    ).then(async () => {
       let newAuth = auth;
       newAuth.group_id = null;
-      newAuth.groupName = null;
+      newAuth.groupName = '';
       newAuth.isAdminGroup = false;
       setAuthStatus(newAuth);
+      setButtonPanel(userRows(newAuth));
     });
   };
-
-  const deleteGroupButton = auth.isAdminGroup ? (
-    <Row>
-      <Col>
-        <Button
-          style={{ margin: 10 }}
-          name={auth.group_id}
-          onClick={deleteGroup}
-        >
-          Delete Group
-        </Button>
-      </Col>
-      <Col>
-        <h3>
-          You are admin in group ->
-          <Badge color="secondary">{auth.groupName}</Badge>
-        </h3>
-      </Col>
-    </Row>
-  ) : (
-    <Row>
-      <Col>
-        <h3>
-          {auth.group_id ? (
-            <div>
-              You are member of group ->
-              <Badge color="secondary">{auth.groupName}</Badge>
-            </div>
-          ) : (
-            "You're not a member of the group"
-          )}
-        </h3>
-      </Col>
-    </Row>
-  );
 
   const confirmInvite = e => {
     let token = e.target.value;
@@ -92,7 +59,8 @@ const UserPanel = () => {
         showError("Confirmed");
         let newAuth = auth;
         newAuth.group_id = data.id;
-        
+        newAuth.isAdminGroup = false;
+        newAuth.groupName = data.name;
         setNotification(newNotes);
         setAuthStatus(newAuth);
       }
@@ -118,13 +86,55 @@ const UserPanel = () => {
     setNotification(response);
   };
 
+  const adminRows = (user) => {
+    return (
+      <Row>
+        <Col>
+          <Button
+            style={{ margin: 10 }}
+            name={auth.group_id}
+            onClick={deleteGroup}
+          >
+            Delete Group
+        </Button>
+        </Col>
+        <Col>
+          <h3>
+            You are admin in group ->
+          <Badge color="secondary">{user.groupName}</Badge>
+          </h3>
+        </Col>
+      </Row>
+    );
+  };
+
+  const userRows = (user) => {
+    return (
+      <Row>
+        <Col>
+          <h3>
+            {user.group_id ? (
+              <div>
+                You are member of group ->
+                <Badge color="secondary">{user.groupName}</Badge>
+              </div>
+            ) : (
+                "You're not a member of the group"
+              )}
+          </h3>
+        </Col>
+      </Row>
+    )
+  };
+
   React.useEffect(() => {
     getNotifications();
+    auth.isAdminGroup ? setButtonPanel(adminRows(auth)) : setButtonPanel(userRows(auth));
   }, []);
 
   return (
     <Container>
-      {deleteGroupButton}
+      {buttonPanel}
       {error && <ErrorMessage errorMessage={error} />}
       <Header> Your Notifications </Header>
       {toCompact(notifications).map((noteTriad, ind) => {
