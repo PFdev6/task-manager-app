@@ -20,7 +20,7 @@ const createGroup = (req, res) => {
       }
       return group;
     })
-    .then(task => res.status(200).send(task))
+    .then(group => res.status(200).send(group))
     .catch(error => res.status(400).send(error));
 };
 
@@ -94,7 +94,9 @@ const confirmInviteToGroup = (req, res) => {
       console.log(updateInfo[0]);
       await db.Notification.destroy({ where: { id: id } });
       if (updateInfo[0] === 1) {
-        res.status(200).send(group_id);
+        db.Group.findOne({where: {id: group_id}}).then((group) => {
+          res.status(200).send(group);
+        })
       } else {
         res.status(400).send({ message: "Oops" });
       }

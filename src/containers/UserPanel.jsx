@@ -35,6 +35,8 @@ const UserPanel = () => {
     ).then(() => {
       let newAuth = auth;
       newAuth.group_id = null;
+      newAuth.groupName = null;
+      newAuth.isAdminGroup = false;
       setAuthStatus(newAuth);
     });
   };
@@ -89,7 +91,8 @@ const UserPanel = () => {
         let newNotes = notifications.filter(note => note.id !== Number(id));
         showError("Confirmed");
         let newAuth = auth;
-        newAuth.group_id = data;
+        newAuth.group_id = data.id;
+        
         setNotification(newNotes);
         setAuthStatus(newAuth);
       }

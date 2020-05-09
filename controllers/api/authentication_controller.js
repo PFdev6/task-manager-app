@@ -50,11 +50,10 @@ const loginV2 = (req, res, next) => {
         const error = new Error("An Error occurred");
         return next(error);
       }
-      console.log("Is Admin Group?");
       if (user === false) return res.json(info);
       req.login(user, { session: false }, error => {
         if (error) return next(error);
-        console.log(user.Group.admin_id === user.id);
+        
         const body = {
           id: user.id,
           email: user.email,

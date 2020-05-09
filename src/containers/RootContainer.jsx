@@ -26,6 +26,8 @@ const RootContainer = () => {
       if (note.type === "kick") {
         let newAuth = auth;
         newAuth.group_id = null;
+        newAuth.groupName = null;
+        newAuth.isAdminGroup = false;
         setAuthStatus(newAuth);
       }
 
