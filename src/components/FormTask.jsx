@@ -14,9 +14,9 @@ const FormTask = () => {
   const auth = React.useContext(authContext).auth;
   const { error, showError } = useErrorHandler(null);
   const formOptions = auth.group_id ? ["Own", "Group"] : ["Own"];
-  const createTaskHandler = params => {
+  const createTaskHandler = async params => {
     setLoading(true);
-    apiRequest(
+    let res = await apiRequest(
       "/api/tasks/create",
       "post",
       {
@@ -24,29 +24,38 @@ const FormTask = () => {
       },
       auth.token
     )
-      .then(data => {
-        showError("The task was created successfully.");
-        setTimeout(() => {
-          setLoading(false);
-        }, 3000);
-      })
-      .catch(err => {
-        setLoading(false);
-        showError(err.message);
-      });
+    showError("The task was created successfully.");
+    setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+    const files = params.files;
+    files.append('id', res.id);
+    const isFile = true;
+    apiRequest(
+      "/api/tasks/create/files",
+      "post",
+      files,
+      auth.token,
+      isFile
+    ).then(res => {
+
+    });
   };
 
   return (
     <Form
+      id="taskForm"
       onSubmit={e => {
         e.preventDefault();
-        const params = { tasks: [] };
+        const params = { tasks: [], files: new FormData };
         Array.from(e.target.elements).forEach(el => {
           const typeField = el.name.split("_")[0];
           if (typeField === "header") {
             params.tasks.push({});
           }
-
+          if (typeField === "file") {
+            params.files.append(el.name, el.files[0]);
+          }
           params.tasks[params.tasks.length - 1][typeField] = el.value;
         });
         params.userId = auth.id;

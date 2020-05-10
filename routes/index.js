@@ -3,7 +3,7 @@ const c = require("../controllers/index");
 const passport = require("passport");
 const secureRoute = () => passport.authenticate("jwt", { session: false });
 
-module.exports = app => {
+module.exports = (app) => {
   app.get("/api", secureRoute(), (req, res) => {
     res.status(200).send({
       data: "Welcome Node Sequlize API v1"
@@ -18,6 +18,7 @@ module.exports = app => {
 
   // Tasks
   app.post("/api/tasks/create", secureRoute(), c.task_controller.create);
+  app.post("/api/tasks/create/files", secureRoute(), c.task_controller.uploadFiles);
   app.post("/api/tasks/done", secureRoute(), c.task_controller.done);
   app.delete("/api/tasks/delete", secureRoute(), c.task_controller.delete);
   app.get("/api/tasks", secureRoute(), c.task_controller.get);

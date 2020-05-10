@@ -4,6 +4,7 @@ import { FormGroup, Input } from "reactstrap";
 const NewTask = props => {
   const [header, setHeader] = React.useState("");
   const [content, setContent] = React.useState("");
+  const [file, setFile] = React.useState("");
   const [endDate, setEndDate] = React.useState(
     new Date().toISOString().substr(0, 16)
   );
@@ -11,6 +12,7 @@ const NewTask = props => {
   const id = props.id;
   const headerName = `header_${id}`;
   const contentName = `content_${id}`;
+  const fileName = `file_${id}`;
   const endDateName = `endDate_${id}`;
 
   return (
@@ -30,6 +32,13 @@ const NewTask = props => {
           name={contentName}
           value={content}
           onChange={e => setContent(e.target.value)}
+        />
+      </FormGroup>
+      <FormGroup>
+        <Input
+          type="file"
+          name={fileName}
+          onChange={e => setFile(e.target.files[0])}
         />
       </FormGroup>
       <FormGroup>

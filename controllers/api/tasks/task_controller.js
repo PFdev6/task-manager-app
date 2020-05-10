@@ -3,6 +3,7 @@ const mailer = require("../../../services/mailer");
 const jwt = require("jsonwebtoken");
 const schedule = require("node-schedule");
 const Sequelize = require("sequelize");
+const path = require("path");
 
 const createTask = (req, res) => {
   console.log(req.body);
@@ -59,6 +60,51 @@ const createTask = (req, res) => {
       res.status(400).send(error);
     });
 };
+
+const uploadFiles = async (req, res) => {
+  console.log("------------------IMAGE--REQUEST-------------------");
+  console.log(req.body);
+  
+  const task = await db.Task.findOne({
+    where: { id: req.body.id, parent_task_id: null },
+    include: [{ model: db.Task, as: "subTasks" }]
+  });
+  
+  console.log(req.files);
+  
+  for (var key in req.files) {
+    let fileName = `${Date.now()}---${req.files[key].name}`;
+    let splitedName = key.split("_")[1];
+    if(splitedName == "main") {
+      await req.files[key].mv(path.join(process.env.PWD, "uploads", fileName));
+      await db.Task.update(
+        {
+          file_path: fileName
+        },
+        {
+          where: { id: task.id }
+        });
+    } else {
+      task.subTasks.forEach(async (st, ind) => {
+        if(ind === Number(splitedName)) {
+          await req.files[key].mv(path.join(process.env.PWD, "uploads", fileName));
+          await db.Task.update(
+            {
+              file_path: fileName
+            },
+            {
+              where: { id: st.id }
+            });
+        }
+      });
+    }
+  }
+  
+  res.status(200).send({ message: "OK" });
+  console.log("------------------IMAGE--REQUEST-------------------");
+}
+
+module.exports.uploadFiles = uploadFiles;
 
 const sendMailNotifications = (users, mainTask) => {
   const date = new Date(mainTask.end_date);

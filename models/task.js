@@ -6,6 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       type_task: DataTypes.INTEGER,
       header: DataTypes.STRING,
       content: DataTypes.TEXT,
+      file_path: DataTypes.STRING,
       group_id: DataTypes.INTEGER,
       user_id: DataTypes.INTEGER,
       parent_task_id: DataTypes.INTEGER,

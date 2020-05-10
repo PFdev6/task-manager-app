@@ -10,32 +10,29 @@ const routes = require("../routes/index");
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const wsRoutes = require("./ws-index");
-const multer = require('multer');
+const fileUpload = require('express-fileupload');
+const cors = require('cors');
+const morgan = require('morgan');
+const _ = require('lodash');
 
 console.log(process.env.AUTH_TYPE);
 require(`./auth/${process.env.AUTH_TYPE}`);
 
-// File Storage
-const Storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-      callback(null, "./Images");
-  },
-  filename: (req, file, callback) => {
-      callback(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
-  }
-});
-app.use((req, res, next) => {
-  req.uploadFile = multer({
-    storage: Storage
-  }).array("imgUploader", 3);
-  
-  next()
-})
+// File Upload
+app.use(fileUpload({
+  createParentPath: true,
+  useTempFiles: true,
+  tempFileDir: path.join(__dirname, 'temp')
+}));
 
 // HTTP APP
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(DIST_DIR));
+app.use(morgan('dev'));
+app.use("/uploads", express.static("public/images"));
+
 app.get("/", (req, res) => {
   res.sendFile(HTML_FILE);
 });

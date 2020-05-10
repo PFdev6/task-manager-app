@@ -65,7 +65,7 @@ export const getStoredUserAuth = () => {
   return DEFAULT_USER_AUTH;
 };
 
-export const apiRequest = (url, method, bodyParams, token = null) => {
+export const apiRequest = (url, method, bodyParams, token = null, file = false) => {
   let headers = {
     Accept: "application/json",
     "Content-Type": "application/json"
@@ -74,6 +74,10 @@ export const apiRequest = (url, method, bodyParams, token = null) => {
     headers.Authorization = `Bearer ${token}`;
   }
   let body = bodyParams ? { body: JSON.stringify(bodyParams) } : {};
+  if (file) {
+    body = { body: bodyParams };
+    delete headers["Content-Type"]
+  }
   return fetch(url, {
     method,
     headers: headers,
