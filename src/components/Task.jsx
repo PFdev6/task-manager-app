@@ -78,7 +78,13 @@ const Task = props => {
     >
       <CardBody>
         <CardHeader>{data.header}</CardHeader>
-        <CardText>{data.content}</CardText>
+        <CardText>
+          {data.content}
+          {data.file_path ?
+            (<img style={{height: 200, width: 200}} src={`uploads/${data.file_path}`} alt="Image" />) :
+              null 
+          }
+        </CardText>
         {isOwner ? (
           <Button style={{ margin: 5 }} value={data.id} onClick={deleteTask}>
             Delete
@@ -116,7 +122,13 @@ const Task = props => {
                       </Badge>
                     ) : null}
                   </ToastHeader>
-                  <ToastBody>{subTask.content}</ToastBody>
+                  <ToastBody>
+                    {subTask.content}
+                    {subTask.file_path ?
+                    (<img style={{height: 220, width: 150}} src={`uploads/${subTask.file_path}`} alt="Image" />) :
+                      null 
+                    }
+                  </ToastBody>
                   <ToastBody>
                     <Button
                       size="sm"

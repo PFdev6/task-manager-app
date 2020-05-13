@@ -31,7 +31,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(DIST_DIR));
 app.use(morgan('dev'));
-app.use("/uploads", express.static("public/images"));
+// files URL/uploads/FILENAME
+app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.sendFile(HTML_FILE);
