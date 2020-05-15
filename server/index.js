@@ -25,18 +25,21 @@ app.use(fileUpload({
   tempFileDir: path.join(__dirname, 'temp')
 }));
 
-// HTTP APP
+// HTTP APP --mid--
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(DIST_DIR));
 app.use(morgan('dev'));
+
 // files URL/uploads/FILENAME
 app.use("/uploads", express.static("uploads"));
 
 app.get("/", (req, res) => {
   res.sendFile(HTML_FILE);
 });
+
+// Routing
 routes(app);
 
 // WEBSOCKET APP

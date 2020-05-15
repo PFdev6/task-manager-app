@@ -155,6 +155,7 @@ const taskDone = (req, res) => {
   const { taskId } = req.body;
   db.Task.update(
     {
+      done_by: `${req.user.username}://${req.user.email}`,
       end_date: new Date()
     },
     {
@@ -207,3 +208,22 @@ const deleteTask = (req, res) => {
 };
 
 module.exports.delete = deleteTask;
+
+const searchTasks = (req, res) => {
+  const { text } = req.query;
+  db.Task.findAll({
+    where: 
+      Sequelize.and(
+        Sequelize.or(
+          { header: { [Sequelize.Op.like]: `%${text}%` } },
+          { content: { [Sequelize.Op.like]: `%${text}%` } }
+        ), 
+        Sequelize.or({ user_id: req.user.id }, { group_id: req.user.group_id })
+      ), 
+    include: [{ model: db.Task, as: "subTasks" }]
+  }).then((tasks) => {
+    res.status(200).send(tasks);
+  });
+};
+
+module.exports.search = searchTasks;

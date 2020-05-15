@@ -2,6 +2,7 @@ import * as React from "react";
 import {
   Card,
   Button,
+  Media,
   CardTitle,
   CardText,
   Modal,
@@ -49,11 +50,10 @@ const Task = props => {
           newData = data;
           newData.subTasks = subtasks;
           setData(newData);
+        } else { 
+          newData.end_date = new Date();
         }
-
-        setTimeout(() => {
-          setTasks({ type: "update", newTask: newData });
-        }, 1000);
+        setTasks({ type: "update", newTask: newData });
       }
     );
   };
@@ -80,10 +80,13 @@ const Task = props => {
         <CardHeader>{data.header}</CardHeader>
         <CardText>
           {data.content}
-          {data.file_path ?
-            (<img style={{height: 200, width: 200}} src={`uploads/${data.file_path}`} alt="Image" />) :
-              null 
-          }
+          <br/>
+          <Media>
+            {data.file_path ?
+              (<img style={{height: 200, width: 200}} src={`uploads/${data.file_path}`} alt="Image" />) :
+                null 
+            }
+          </Media>
         </CardText>
         {isOwner ? (
           <Button style={{ margin: 5 }} value={data.id} onClick={deleteTask}>
@@ -106,7 +109,14 @@ const Task = props => {
             <div className="p-3 bg-primary my-2 rounded">
               <Toast>
                 <ToastHeader>{data.header}</ToastHeader>
-                <ToastBody>{data.content}</ToastBody>
+                <ToastBody>
+                  {data.content}
+                  {isFinished(data.end_date) ? (
+                      <Badge style={{ marginLeft: 5 }} color="success" pill>
+                        Done by: {data.done_by}
+                      </Badge>
+                    ) : null}
+                </ToastBody>
               </Toast>
             </div>
           ) : null}
@@ -118,7 +128,7 @@ const Task = props => {
                     {subTask.header}
                     {isFinished(subTask.end_date) ? (
                       <Badge style={{ marginLeft: 5 }} color="success" pill>
-                        Done
+                        Done by: {subTask.done_by}
                       </Badge>
                     ) : null}
                   </ToastHeader>

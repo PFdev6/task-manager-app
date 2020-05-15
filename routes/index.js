@@ -22,6 +22,7 @@ module.exports = (app) => {
   app.post("/api/tasks/done", secureRoute(), c.task_controller.done);
   app.delete("/api/tasks/delete", secureRoute(), c.task_controller.delete);
   app.get("/api/tasks", secureRoute(), c.task_controller.get);
+  app.get("/api/tasks/search", secureRoute(), c.task_controller.search);
 
   // Groups
   app.post("/api/groups/create", secureRoute(), c.group_controller.create);

@@ -2,7 +2,7 @@ import * as React from "react";
 import { taskContext } from "../contexts/TaskContext";
 import { authContext } from "../contexts/AuthContext";
 import Task from "../components/Task";
-import { Container, Button, Row, Col } from "reactstrap";
+import { Container, Button, Row, Col, Input } from "reactstrap";
 import { apiRequest } from "../utils/Helpers";
 
 const TaskContainer = () => {
@@ -45,6 +45,23 @@ const TaskContainer = () => {
     setTypeTask(!typeTask);
   };
 
+  const changeSearchText = (e) => {
+    const searchText = e.target.value;
+
+    if(searchText === "") {
+      getUserTasks({ by: "user_id", id: auth.id });
+    } else {
+      apiRequest(
+        `/api/tasks/search?text=${searchText}`,
+        "get",
+        null,
+        auth.token
+      ).then((tasks) => {
+        setTasks({ type: "add", init: true, newTasks: tasks });
+      });
+    }
+  };
+
   React.useEffect(() => {
     getUserTasks({ by: "user_id", id: auth.id });
   }, []);
@@ -58,6 +75,11 @@ const TaskContainer = () => {
           </Col>
         </Row>
       ) : null}
+        <Row>
+          <Col>
+            <Input placeholder="Search" type="text" onChange={changeSearchText}/>
+          </Col>
+        </Row>
       {toCompact(tasks).map((taskChunk, key) => {
         return (
           <Row key={key}>
