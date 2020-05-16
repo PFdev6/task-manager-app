@@ -14,7 +14,9 @@ const transport = nodemailer.createTransport({
 
 const signUpText = email => {
   token = jwt.sign({ email: email }, process.env.JWT_PRIVATE_KEY);
-  return `<p> Confirm user --> Click <a href='${process.env.HOST}:${process.env.PORT}/api/confirmUser?token=${token}'>here</a> to confirm account </p>`;
+  const env = process.env.NODE_ENV
+  const portString = env !== "production" ? `:${process.env.PORT}` : '';
+  return `<p> Confirm user --> Click <a href='${process.env.HOST}${portString}/api/confirmUser?token=${token}'>here</a> to confirm account </p>`;
 };
 
 module.exports.confirmationUser = email => {

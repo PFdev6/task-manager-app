@@ -93,9 +93,11 @@ module.exports.confirmUser = (req, res) => {
         { where: { email: email, confirmation_date: null } }
       )
         .then(result => {
+          const env = process.env.NODE_ENV
+          const portString = env !== "production" ? `:${process.env.PORT}` : '';
           res
             .status(301)
-            .redirect(`http://${process.env.HOST}:${process.env.PORT}`);
+            .redirect(`http${portString === '' ? 's' : ''}://${process.env.HOST}${portString}`);
         })
         .error(err => {
           res.send("<h1> Confirmed </h1>");

@@ -159,7 +159,7 @@ const taskDone = (req, res) => {
       end_date: new Date()
     },
     {
-      where: Sequelize.or({ id: taskId }, { parent_task_id: taskId })
+      where: Sequelize.or({ id: taskId })
     }
   ).then(numUpdated => {
     db.Task.findOne({
