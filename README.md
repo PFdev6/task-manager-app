@@ -5,3 +5,5 @@
 - JWT_PRIVATE_KEY
 - HOST
 - PORT
+# Prod Env
+https://pf-tmanager.herokuapp.com
