@@ -22,12 +22,8 @@
     }
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "task_manager_database_production",
-    "host": "127.0.0.1",
+    "url": "DATABASE_URL",
     "dialect": "postgres",
-    "operatorsAliases": false,
     "define": {
       "timestamps": true
     }

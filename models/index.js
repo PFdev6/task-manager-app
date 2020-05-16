@@ -8,9 +8,13 @@ const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
 const db = {};
 
+if(env === "production") {
+  config.url = process.env.DATABASE_URL
+}
+
 let sequelize;
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+if (env === "production") {
+  sequelize = new Sequelize(config.url, config);
 } else {
   sequelize = new Sequelize(
     config.database,

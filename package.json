@@ -7,8 +7,7 @@
     "start": "node server/index.js",
     "dev": "nodemon server/index.js",
     "webpack-dev": "webpack --mode development",
-    "build": "webpack --mode production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --config webpack.prod.js"
   },
   "author": "Paul Fedarovich",
   "license": "ISC",
@@ -56,7 +55,8 @@
     "socket.io": "^2.3.0",
     "styled-components": "^5.0.1",
     "uuid": "^7.0.2",
-    "validator": "^13.0.0"
+    "validator": "^13.0.0",
+    "webpack-merge": "^4.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.8.7",
