@@ -6,7 +6,7 @@ import TaskContainer from "./TaskContainer";
 
 const TaskPanel = () => {
   const addTaskLabel = "Add Task";
-  const tasksLabel = "List Ov Tasks";
+  const tasksLabel = "Task List";
   const [currentView, setCurrentView] = React.useState(<TaskContainer />);
   const [viewState, setViewState] = React.useState(true);
   const [buttonLabel, setButtonLabel] = React.useState(addTaskLabel);

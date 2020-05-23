@@ -50,9 +50,8 @@ const Task = props => {
           newData = data;
           newData.subTasks = subtasks;
           setData(newData);
-        } else { 
-          newData.end_date = new Date();
         }
+        
         setTasks({ type: "update", newTask: newData });
       }
     );

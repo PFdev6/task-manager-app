@@ -15,7 +15,6 @@ import ErrorMessage from "../components/ErrorMessage";
 import useErrorHandler from "../utils/custom-hooks/ErrorHandler";
 import { authContext } from "../contexts/AuthContext";
 import { apiRequest, validateNewTaskForm } from "../utils/Helpers";
-import { Header } from "../components/Styles";
 
 const GroupContainer = () => {
   const { auth } = React.useContext(authContext);

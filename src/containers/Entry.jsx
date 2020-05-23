@@ -10,9 +10,6 @@ import {
   Container,
 } from "reactstrap";
 import classnames from "classnames";
-/** Context */
-// import { authContext } from "../contexts/AuthContext";
-/** Presentation */
 import { Wrapper } from "../components/Styles";
 
 import Login from "./Login";
@@ -25,7 +22,6 @@ const Entry = (props) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-  //const { auth } = React.useContext(authContext);
   return (
     <Wrapper>
       <Container className="themed-container">
